@@ -1,7 +1,7 @@
 # Python
 __pycache__/
 *.pyc
-./tests
+tests/
 # Virtual environments
 venv/
 .env/
