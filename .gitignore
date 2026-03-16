@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+./tests
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Vector DB storage
+chroma_db/
+qdrant_storage/
+
+# Build files
+dist/
+build/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
