@@ -1,16 +1,19 @@
 import requests
-import json
 import os
-from dotenv import load_dotenv, dotenv_values
+from dotenv import load_dotenv
 
-load_dotenv() 
+load_dotenv()
+
 
 def generate(prompt):
+    api_key = os.getenv("api_key")
+    if not api_key:
+        raise ValueError("Missing 'api_key' in environment variables.")
 
-    url="https://openrouter.ai/api/v1/chat/completions"
-    headers={
-        "Authorization": os.getenv('api_key'),
-        "Content-Type": "application/json"
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": api_key,
+        "Content-Type": "application/json",
     }
 
     data = {
@@ -22,8 +25,14 @@ def generate(prompt):
             }
         ]
     }
-    response=requests.post(url,headers=headers,json=data)
+
+    response = requests.post(url, headers=headers, json=data, timeout=60)
+    response.raise_for_status()
     result = response.json()
+
+    if "choices" not in result or not result["choices"]:
+        raise ValueError(f"Unexpected model response format: {result}")
+
     return result["choices"][0]["message"]["content"]
 
 

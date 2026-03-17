@@ -8,3 +8,6 @@ tiktoken
 sentence-transformers
 qdrant_client
 langchain_qdrant
+fastapi
+uvicorn
+python-multipart

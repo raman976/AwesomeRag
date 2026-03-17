@@ -1,7 +1,7 @@
 # Python
 __pycache__/
+**/__pycache__/
 *.pyc
-tests/
 # Virtual environments
 venv/
 .env/
@@ -26,6 +26,19 @@ qdrant_storage/
 dist/
 build/
 *.egg-info/
+node_modules/
+.next/
+Frontend/node_modules/
+Frontend/.next/
+Frontend/.turbo/
+
+# Local test/demo artifacts
+tests/
+
+# Python tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 # Jupyter
 .ipynb_checkpoints/
