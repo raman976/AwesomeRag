@@ -4,3 +4,7 @@ langchain-community
 python-dotenv
 requests
 pypdf
+tiktoken
+sentence-transformers
+qdrant_client
+langchain_qdrant
