@@ -30,6 +30,11 @@ app.add_middleware(
 )
 
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
+
 class QueryRequest(BaseModel):
     query: str = Field(..., min_length=1, description="Question to ask over uploaded documents")
     k: int = Field(default=4, ge=1, le=10, description="Number of chunks to retrieve")

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: awesomerag
+  namespace: awesomerag
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: awesomerag
+  template:
+    metadata:
+      labels:
+        app: awesomerag
+    spec:
+      containers:
+        - name: awesomerag
+          image: nst-n1.nstsdc.org:30500/awesomerag:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: awesomerag-config
+            - secretRef:
+                name: awesomerag-secrets
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 20
