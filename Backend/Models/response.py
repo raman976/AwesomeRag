@@ -1,39 +1,45 @@
-import requests
 import os
 from dotenv import load_dotenv
+from groq import Groq
 
 load_dotenv()
 
 
+MODEL_NAME = "moonshotai/kimi-k2-instruct-0905"
+
+
 def generate(prompt):
-    api_key = os.getenv("api_key")
+    api_key = os.getenv("rag_api")
     if not api_key:
-        raise ValueError("Missing 'api_key' in environment variables.")
+        raise ValueError("Missing 'rag_api' in environment variables.")
 
-    url = "https://openrouter.ai/api/v1/chat/completions"
-    headers = {
-        "Authorization": api_key,
-        "Content-Type": "application/json",
-    }
-
-    data = {
-        "model": "stepfun/step-3.5-flash:free",
-        "messages": [
+    client = Groq(api_key=api_key)
+    completion = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=[
             {
                 "role": "user",
-                "content": prompt
+                "content": prompt,
             }
-        ]
-    }
+        ],
+        temperature=0.6,
+        max_completion_tokens=4096,
+        top_p=1,
+        stream=True,
+        stop=None,
+    )
 
-    response = requests.post(url, headers=headers, json=data, timeout=60)
-    response.raise_for_status()
-    result = response.json()
+    chunks = []
+    for chunk in completion:
+        chunk_text = chunk.choices[0].delta.content or ""
+        if chunk_text:
+            chunks.append(chunk_text)
 
-    if "choices" not in result or not result["choices"]:
-        raise ValueError(f"Unexpected model response format: {result}")
+    answer = "".join(chunks).strip()
+    if not answer:
+        raise ValueError("Empty response received from Groq model.")
 
-    return result["choices"][0]["message"]["content"]
+    return answer
 
 
 

@@ -5,7 +5,6 @@ import uuid
 
 _MAX_TURNS = 10
 
-# Key: (user_id, session_id) -> deque of turns
 _store: dict[tuple[str, str], deque[dict[str, str]]] = defaultdict(lambda: deque(maxlen=_MAX_TURNS))
 _lock = Lock()
 

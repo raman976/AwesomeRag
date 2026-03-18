@@ -144,7 +144,6 @@ export default function HomePage() {
       persistSessionId(data.session_id);
       setSessionId(data.session_id);
     } catch (error) {
-      // Fallback keeps UX responsive even if session endpoint is temporarily unavailable.
       const fallbackSessionId = resetSessionId();
       setSessionId(fallbackSessionId);
       const message = error instanceof Error ? error.message : "Could not create a new session.";
@@ -171,7 +170,6 @@ export default function HomePage() {
       return Array.from(dedupedMap.values());
     });
 
-    // Reset so selecting the same file again still fires onChange.
     event.target.value = "";
     setIngestError("");
   }
@@ -319,9 +317,6 @@ export default function HomePage() {
           <label className="dropzone">
             <input type="file" accept="application/pdf" multiple onChange={handleFileChange} />
             <span className="dropzone-title">Drop PDFs here or browse from disk</span>
-            {/* <span className="dropzone-copy">
-              Multi-file upload is supported. Re-ingestion stays stable because document ids are deterministic.
-            </span> */}
           </label>
 
           <div className="file-stack">
@@ -383,7 +378,6 @@ export default function HomePage() {
           </div>
 
           <label className="query-field">
-            {/* <span></span> */}
             <textarea
               value={query}
               onChange={(event) => setQuery(event.target.value)}

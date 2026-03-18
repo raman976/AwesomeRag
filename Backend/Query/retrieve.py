@@ -8,8 +8,9 @@ if __package__ in (None, ""):
 
 from Backend.DB.qdrant import get_vector_store
 
+
 def _build_filter(user_id, doc_id=None, session_id=None):
-    must_conditions=[
+    conditions = [
         models.FieldCondition(
             key="metadata.user_id",
             match=models.MatchValue(value=user_id),
@@ -17,7 +18,7 @@ def _build_filter(user_id, doc_id=None, session_id=None):
     ]
 
     if session_id:
-        must_conditions.append(
+        conditions.append(
             models.FieldCondition(
                 key="metadata.session_id",
                 match=models.MatchValue(value=session_id),
@@ -25,18 +26,18 @@ def _build_filter(user_id, doc_id=None, session_id=None):
         )
 
     if doc_id:
-        must_conditions.append(
+        conditions.append(
             models.FieldCondition(
                 key="metadata.doc_id",
                 match=models.MatchValue(value=doc_id),
             )
         )
 
-    return models.Filter(must=must_conditions)
+    return models.Filter(must=conditions)
 
 
 def _doc_identity(doc):
-    metadata=doc.metadata or {}
+    metadata = doc.metadata or {}
     return (
         metadata.get("doc_id"),
         metadata.get("source_file"),
@@ -46,17 +47,16 @@ def _doc_identity(doc):
 
 
 def _diversify_results(scored_docs, k):
-    selected=[]
-    selected_keys=set()
-    covered_doc_ids=set()
+    selected = []
+    selected_keys = set()
+    covered_doc_ids = set()
 
-    # First pass: cover as many distinct documents as possible.
     for doc, _score in scored_docs:
-        identity=_doc_identity(doc)
+        identity = _doc_identity(doc)
         if identity in selected_keys:
             continue
 
-        doc_id=doc.metadata.get("doc_id") if doc.metadata else None
+        doc_id = doc.metadata.get("doc_id") if doc.metadata else None
         if doc_id and doc_id not in covered_doc_ids:
             selected.append(doc)
             selected_keys.add(identity)
@@ -65,9 +65,8 @@ def _diversify_results(scored_docs, k):
         if len(selected) >= k:
             return selected[:k]
 
-    # Second pass: fill remaining slots with best leftover chunks.
     for doc, _score in scored_docs:
-        identity=_doc_identity(doc)
+        identity = _doc_identity(doc)
         if identity in selected_keys:
             continue
         selected.append(doc)
@@ -78,13 +77,13 @@ def _diversify_results(scored_docs, k):
     return selected[:k]
 
 
-def get_similar(query,k,user_id,doc_id=None,session_id=None):
-    instance=get_vector_store()
-    retrieval_filter=_build_filter(user_id=user_id, doc_id=doc_id, session_id=session_id)
+def get_similar(query, k, user_id, doc_id=None, session_id=None):
+    vector_store = get_vector_store()
+    retrieval_filter = _build_filter(user_id=user_id, doc_id=doc_id, session_id=session_id)
 
     try:
-        fetch_k=max(k * 6, 20)
-        scored_docs=instance.similarity_search_with_score(
+        fetch_k = max(k * 6, 20)
+        scored_docs = vector_store.similarity_search_with_score(
             query=query,
             k=fetch_k,
             filter=retrieval_filter,
@@ -95,9 +94,8 @@ def get_similar(query,k,user_id,doc_id=None,session_id=None):
 
         return _diversify_results(scored_docs, k)
     except Exception:
-        docs=instance.similarity_search(
+        return vector_store.similarity_search(
             query=query,
             k=k,
             filter=retrieval_filter,
         )
-        return docs

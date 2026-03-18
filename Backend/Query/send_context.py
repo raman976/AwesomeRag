@@ -1,5 +1,6 @@
 import argparse
 import sys
+from textwrap import dedent
 from pathlib import Path
 
 if __package__ in (None, ""):
@@ -43,24 +44,26 @@ def build_prompt(query, context, chat_history, docs):
     conversation_context = build_conversation_context(chat_history)
     document_overview = build_document_overview(docs)
 
-    return f"""
+    return dedent(
+        f"""
+        You are an intelligent assistant. Use only the provided document context and session conversation history.
+        Be respectful and concise, and do not use outside knowledge.
+        If multiple documents are relevant, include each one in your response and mention their names.
 
-    You are an intelligent assistant. Use only the provided document context and session conversation history.
-    Be respectful and concise, and do not use outside knowledge.
-    If multiple documents are relevant, include each one in your response and mention their names.
+        Conversation History:
+        {conversation_context}
 
-    Conversation History:
-    {conversation_context}
+        Available Documents:
+        {document_overview}
 
-    Available Documents:
-    {document_overview}
+        Document Context:
+        {context}
 
-    Document Context:
-    {context}
-
-    Current Question:
-    {query}
+        Current Question:
+        {query}
         """
+    ).strip()
+
 
 def build_sources(docs):
     sources = []
@@ -94,8 +97,7 @@ def answer(query, user_id, k=4, doc_id=None, session_id=None):
 
     prompt = build_prompt(query=query, context=context, chat_history=[], docs=content)
 
-    answer = generate(prompt)
-    return answer
+    return generate(prompt)
 
 
 def answer_with_sources(query, user_id, k=4, doc_id=None, chat_history=None, session_id=None):
@@ -120,18 +122,18 @@ def answer_with_sources(query, user_id, k=4, doc_id=None, chat_history=None, ses
 
 
 def main():
-    parser=argparse.ArgumentParser(description="Ask questions over local user-scoped documents")
+    parser = argparse.ArgumentParser(description="Ask questions over local user-scoped documents")
     parser.add_argument("--query", required=True, help="Question to ask")
     parser.add_argument("--user-id", required=True, help="User identifier used for metadata filtering")
     parser.add_argument("--k", type=int, default=4, help="Number of chunks to retrieve")
     parser.add_argument("--doc-id", help="Optional doc_id to narrow search to one document")
     parser.add_argument("--session-id", help="Optional session identifier to scope retrieval")
-    args=parser.parse_args()
+    args = parser.parse_args()
 
     print(answer(args.query, user_id=args.user_id, k=args.k, doc_id=args.doc_id, session_id=args.session_id))
 
 
 if __name__ == "__main__":
     main()
-    
+
 
