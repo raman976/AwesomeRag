@@ -42,3 +42,27 @@ tests/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# Auto-generated Next.js types
+next-env.d.ts
+Frontend/next-env.d.ts
+
+# Local env files
+.env.local
+.env*.local
+
+# Certificates and keys
+*.pem
+*.key
+
+# Coverage reports
+coverage/
+htmlcov/
+
+# Temporary files
+*.tmp
+*.temp

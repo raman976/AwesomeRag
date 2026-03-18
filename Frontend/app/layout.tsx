@@ -16,6 +16,9 @@ const bodyFont = Manrope({
 export const metadata: Metadata = {
   title: "AwesomeRag Workspace",
   description: "Upload documents, query them, and inspect attributed answers.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

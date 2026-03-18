@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: awesomerag
-          image: nst-n1.nstsdc.org:30500/awesomerag:latest
+          image: localhost:30500/awesomerag:v1
           imagePullPolicy: Always
           ports:
             - containerPort: 8000

@@ -2,15 +2,15 @@ NST backend deployment steps
 
 1. Build backend image from repo root
 
-docker build -t awesomerag:latest .
+docker build -t awesomerag:v1 .
 
 2. Tag for NST local registry
 
-docker tag awesomerag:latest nst-n1.nstsdc.org:30500/awesomerag:latest
+docker tag awesomerag:v1 localhost:30500/awesomerag:v1
 
 3. Push image
 
-docker push nst-n1.nstsdc.org:30500/awesomerag:latest
+docker push localhost:30500/awesomerag:v1
 
 4. SSH into cluster node and go to repo
 
