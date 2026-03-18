@@ -4,4 +4,4 @@ metadata:
   name: awesomerag-config
   namespace: awesomerag
 data:
-  ALLOWED_ORIGINS: http://127.0.0.1:3000,http://localhost:3000
+  ALLOWED_ORIGINS: http://127.0.0.1:3000,http://localhost:3000,https://awesome-rag-zeta.vercel.app
