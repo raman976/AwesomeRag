@@ -5,3 +5,4 @@ metadata:
   namespace: awesomerag
 data:
   ALLOWED_ORIGINS: http://127.0.0.1:3000,http://localhost:3000,https://awesome-rag-zeta.vercel.app
+  ALLOWED_ORIGIN_REGEX: https://.*\.vercel\.app

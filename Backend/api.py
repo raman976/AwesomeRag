@@ -20,10 +20,12 @@ allowed_origins = os.getenv(
     "ALLOWED_ORIGINS",
     "http://127.0.0.1:3000,http://localhost:3000",
 ).split(",")
+allowed_origin_regex = os.getenv("ALLOWED_ORIGIN_REGEX")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[origin.strip() for origin in allowed_origins if origin.strip()],
+    allow_origin_regex=allowed_origin_regex.strip() if allowed_origin_regex else None,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
