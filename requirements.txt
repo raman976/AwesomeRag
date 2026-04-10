@@ -1,8 +1,6 @@
-langchain
 langchain-text-splitters
 langchain-community
 python-dotenv
-requests
 pypdf
 tiktoken
 sentence-transformers

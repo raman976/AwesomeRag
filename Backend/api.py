@@ -9,11 +9,27 @@ from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+try:
+    import torch
+except Exception:
+    torch = None
+
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 
 app = FastAPI(title="AwesomeRag API", version="1.0.0")
+
+
+@app.on_event("startup")
+def log_torch_runtime() -> None:
+    if torch is None:
+        print("Torch version: unavailable")
+        print("CUDA available: unavailable")
+        return
+
+    print("Torch version:", torch.__version__)
+    print("CUDA available:", torch.cuda.is_available())
 
 
 allowed_origins = os.getenv(
