@@ -12,3 +12,15 @@ Frontend
 tests
 node_modules
 **/__pycache__
+*.pdf
+*.csv
+*.json
+*.zip
+data/
+datasets/
+models/
+chroma_db/
+qdrant_storage/
+*.bin
+*.pt
+*.onnx
