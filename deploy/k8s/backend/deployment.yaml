@@ -13,17 +13,23 @@ spec:
       labels:
         app: awesomerag
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: nst-n4
+
       containers:
         - name: awesomerag
-          image: localhost:30500/awesomerag:v1
-          imagePullPolicy: Always
+          image: localhost:30500/awesomerag:v4 
+          imagePullPolicy: IfNotPresent    
+
           ports:
             - containerPort: 8000
+
           envFrom:
             - configMapRef:
                 name: awesomerag-config
             - secretRef:
                 name: awesomerag-secrets
+
           resources:
             requests:
               cpu: 250m
@@ -31,12 +37,14 @@ spec:
             limits:
               cpu: "1"
               memory: 2Gi
+
           readinessProbe:
             httpGet:
               path: /health
               port: 8000
             initialDelaySeconds: 10
             periodSeconds: 10
+
           livenessProbe:
             httpGet:
               path: /health
