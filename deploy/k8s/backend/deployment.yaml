@@ -18,7 +18,7 @@ spec:
 
       containers:
         - name: awesomerag
-          image: localhost:30500/awesomerag:v4 
+          image: localhost:30500/awesomerag:v5
           imagePullPolicy: IfNotPresent    
 
           ports:
